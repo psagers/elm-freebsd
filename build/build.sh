@@ -1,6 +1,7 @@
 #!/bin/sh
 
 SCRIPT=`readlink -f $0`
+PATH=/usr/local/elm/Elm-Platform/0.18/.cabal-sandbox/bin:/usr/local/ghc7/bin:$PATH
 
 install_ghc7 ()
 {
@@ -27,7 +28,7 @@ install_cabal ()
 
     cd /tmp/cabal/cabal-install
     env CC=gcc GHC=/usr/local/ghc7/bin/ghc GHC_PKG=/usr/local/ghc7/bin/ghc-pkg PREFIX=/usr/local/ghc7 \
-        ./bootstrap.sh --global
+        ./bootstrap.sh --global --no-doc
 }
 
 build_elm ()
@@ -37,24 +38,19 @@ build_elm ()
 
     fetch https://raw.githubusercontent.com/elm-lang/elm-platform/master/installers/BuildFromSource.hs
     if patch < `dirname $SCRIPT`/patch-BuildFromSource.hs; then
-        /usr/bin/env PATH=/usr/local/elm/Elm-Platform/0.18/.cabal-sandbox/bin:$PATH /usr/local/ghc7/bin/runhaskell BuildFromSource.hs 0.18
+        runhaskell BuildFromSource.hs 0.18
     fi
 }
 
 link_elm ()
 {
-    [ -e /usr/local/bin/elm ] || ln -s /usr/local/elm/Elm-Platform/0.18/.cabal-sandbox/bin/elm /usr/local/bin/elm
-    [ -e /usr/local/bin/elm-make ] || ln -s /usr/local/elm/Elm-Platform/0.18/.cabal-sandbox/bin/elm-make /usr/local/bin/elm-make
-    [ -e /usr/local/bin/elm-package ] || ln -s /usr/local/elm/Elm-Platform/0.18/.cabal-sandbox/bin/elm-package /usr/local/bin/elm-package
-    [ -e /usr/local/bin/elm-reactor ] || ln -s /usr/local/elm/Elm-Platform/0.18/.cabal-sandbox/bin/elm-reactor /usr/local/bin/elm-reactor
-    [ -e /usr/local/bin/elm-repl ] || ln -s /usr/local/elm/Elm-Platform/0.18/.cabal-sandbox/bin/elm-repl /usr/local/bin/elm-repl
+    for cmd in /usr/local/elm/Elm-Platform/0.18/.cabal-sandbox/bin/elm*; do
+        [ -e /usr/local/bin/`basename $cmd` ] || ln -s $cmd /usr/local/bin/
+    done
 }
-
 
 pkg install -y ca_root_nss compat8x-amd64 gcc gmake perl5 libiconv git
 
 [ -e /usr/local/ghc7/bin/ghc ] || install_ghc7
-PATH=/usr/local/ghc7/bin:$PATH
 [ -e /usr/local/ghc7/bin/cabal ] || install_cabal
-build_elm
-link_elm
+build_elm && link_elm
