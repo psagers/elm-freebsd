@@ -19,7 +19,7 @@ ELM_CMDS_PAT != echo -n "{"; echo -n $(ELM_CMDS) | tr " " ","; echo -n "}"
 	@mkdir -p $(BUILD_PATH) $(LOCAL_PATH) $(ELM_PREFIX)
 
 # The default target builds the latest supported version of Elm.
-.MAIN: .PHONY elm-0.18
+.MAIN: elm-0.18
 
 
 #
@@ -31,6 +31,9 @@ GHC_7_10_BUILD_PATH := $(BUILD_PATH)/ghc-7.10.3
 GHC_7_10_CABAL_TAR_PATH := $(BUILD_PATH)/cabal-install-v1.22.9.0.tar.gz
 GHC_7_10_CABAL_BUILD_PATH := $(BUILD_PATH)/cabal-cabal-install-v1.22.9.0
 GHC_7_10_PREFIX := $(LOCAL_PATH)/ghc-7.10
+
+# Use this target if you just want GHC and Cabal to play with.
+ghc-7.10: .PHONY $(GHC_7_10_PREFIX)/bin/cabal
 
 $(GHC_7_10_PREFIX)/bin/ghc: $(GHC_7_10_BUILD_PATH)
 	(cd $(GHC_7_10_BUILD_PATH) && \

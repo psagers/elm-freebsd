@@ -16,9 +16,8 @@ currently only) target is elm-0.18.
 
     make elm-0.18
 
-> Note: Elm's build script tries to build everything in the right order, but
-it's not entirely reliable. If you get an error building elm-reactor, try
-iterating a couple of times and see if it sorts itself out.
+**Note: Elm's build process can be a little flakey. If elm-reactor fails on the
+first pass, run it again and it should push through.**
 
 By default, Haskell will be built in ./build and installed to ./local. Elm will
 be built in ~/.local/share/elm. You'll probably want to symlink
@@ -29,6 +28,10 @@ Three makefile variables allow you to customize the build/install directories:
 BUILD\_PATH, LOCAL\_PATH, and ELM\_PREFIX. For example:
 
     make BUILD_PATH=/tmp LOCAL_PATH=/tmp/local ELM_PREFIX=$HOME/elm
+
+If you want to see what make is going to do before you jump in, just run `make
+-n`. To clean up, you can run `make clean` or, more specifically, `make
+clean-ghc` and `make clean-elm`.
 
 ## Building the package
 

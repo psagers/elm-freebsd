@@ -6,7 +6,7 @@ main ()
     prefix=/usr/local/elm
     maintainer=nobody@example.com
 
-    while getopts v:m: arg; do
+    while getopts v:p:m: arg; do
         case arg in
             v) version=${OPTARG};;
             p) prefix=${OPTARG};;
@@ -16,7 +16,8 @@ main ()
     done
 
     elm_bin=${prefix}/Elm-Platform/${version}/.cabal-sandbox/bin
-    manifest_version=`manifest_version ${version}`
+    # pkg requires three version components.
+    manifest_version=`echo -n ${version} | sed -E 's/^[[:digit:]]+\.[[:digit:]]+$/&.0/'`
 
     pkg install -y ca_root_nss compat8x-amd64 gcc gmake perl5 libiconv git
     make BUILD_PATH=/tmp LOCAL_PATH=/tmp/local ELM_PREFIX=${prefix} elm-${version}
@@ -68,12 +69,6 @@ echo_manifest ()
         echo "    /usr/local/bin/`basename ${cmd}`: -"
     done
     echo "}"
-}
-
-# pkg requires three version components.
-manifest_version ()
-{
-    echo -n ${version} | sed -E 's/^[[:digit:]]+\.[[:digit:]]+$/&.0/'
 }
 
 echo_flatsize ()
