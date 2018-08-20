@@ -16,7 +16,7 @@ currently only) target is elm-0.18.
 
     make elm-0.18
 
-**Note: Elm's build process can be a little flakey. If elm-reactor fails on the
+**Note: Elm's build process can be a little flaky. If elm-reactor fails on the
 first pass, run it again and it should push through.**
 
 By default, Haskell will be built in ./build and installed to ./local. Elm will

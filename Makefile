@@ -46,7 +46,7 @@ $(GHC_7_10_TAR_PATH):
 	fetch -o $(.TARGET) "https://downloads.haskell.org/~ghc/7.10.3/`basename $(.TARGET)`"
 
 $(GHC_7_10_PREFIX)/bin/cabal: $(GHC_7_10_CABAL_BUILD_PATH)/cabal-install/.cabal-sandbox/bin/cabal
-	cp $(.ALLSRC) $(.TARGET)
+	ln -sf $(.ALLSRC) $(.TARGET)
 
 $(GHC_7_10_CABAL_BUILD_PATH)/cabal-install/.cabal-sandbox/bin/cabal: $(GHC_7_10_PREFIX)/bin/ghc $(GHC_7_10_CABAL_BUILD_PATH)
 	(cd $(GHC_7_10_CABAL_BUILD_PATH)/cabal-install && \
@@ -78,9 +78,8 @@ $(ELM_18_BIN)/$(ELM_CMDS_PAT): $(GHC_7_10_PREFIX)/bin/cabal $(ELM_PREFIX)/BuildF
 		 runhaskell BuildFromSource.hs 0.18)
 
 
-$(ELM_PREFIX)/BuildFromSource.hs: $(FILES_PATH)/patch-BuildFromSource.hs
+$(ELM_PREFIX)/BuildFromSource.hs:
 	fetch -o $(.TARGET) https://raw.githubusercontent.com/elm-lang/elm-platform/master/installers/BuildFromSource.hs
-	patch -d $(ELM_PREFIX) < $(FILES_PATH)/patch-BuildFromSource.hs
 
 
 #
